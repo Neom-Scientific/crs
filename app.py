@@ -157,8 +157,35 @@ if uploaded_file is not None:
     col2.metric(" Match Accuracy", f"{match_percentage:.2f}%")
 
     # Show processed results
-    st.write("###  Processed Results")
-    st.dataframe(sampleDf.head(50), use_container_width=True)
+    # Show processed results
+    st.write("### Processed Results")
+    
+    # All columns
+    all_columns = sampleDf.columns.tolist()
+    
+    # Create two columns: left empty space, right for filter
+    col1, col2 = st.columns([6, 1])  
+    
+    with col2:
+        selected_columns = st.multiselect(
+            "",
+            options=all_columns,
+            default=all_columns,
+            label_visibility="collapsed",
+            placeholder="🔍 Filter columns"
+        )
+    
+    # If nothing selected, fall back to all
+    if not selected_columns:
+        selected_columns = all_columns
+    
+    # Display filtered dataframe
+    st.dataframe(
+        sampleDf[selected_columns].head(50),
+        use_container_width=True
+    )
+
+
 
     # Download button
     # Generate file name based on uploaded file
