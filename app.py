@@ -39,7 +39,7 @@ if uploaded_file is not None:
     else:
         df = pd.read_excel(uploaded_file)
 
-    st.success(f"✅ File uploaded: {uploaded_file.name}")
+    st.success(f" File uploaded: {uploaded_file.name}")
     st.write("### Raw Data Preview")
     st.dataframe(df.head(20), use_container_width=True)
 
@@ -143,6 +143,10 @@ if uploaded_file is not None:
 
         newDf["Pathogenicity_Score"] = scores
         newDf["Predicted_Label"] = pred_labels
+        sampleDf["Damaging_Probability"] = newDf["Damaging_Probability"]
+        sampleDf["ResultPredicted"] = newDf["ResultPredicted"]
+        sampleDf["Pathogenicity_Score"] = newDf["Pathogenicity_Score"]
+        sampleDf["Predicted_Label"] = newDf["Predicted_Label"]
 
     st.success(" Processing complete!")
 
@@ -154,13 +158,19 @@ if uploaded_file is not None:
 
     # Show processed results
     st.write("###  Processed Results")
-    st.dataframe(newDf.head(50), use_container_width=True)
+    st.dataframe(sampleDf.head(50), use_container_width=True)
 
     # Download button
-    csv = newDf.to_csv(index=False).encode("utf-8")
+    # Generate file name based on uploaded file
+    base_name = os.path.splitext(uploaded_file.name)[0]  # removes extension
+    output_filename = f"{base_name}_Predictions.csv"
+
+    # Download button
+    csv = sampleDf.to_csv(index=False).encode("utf-8")
+    
     st.download_button(
         label=" Download Predictions as CSV",
         data=csv,
-        file_name="PathogenicityPredictions.csv",
+        file_name=output_filename,
         mime="text/csv",
     )
