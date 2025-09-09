@@ -170,7 +170,7 @@ if uploaded_file is not None:
         selected_columns = st.multiselect(
             "",
             options=all_columns,
-            default=all_columns,
+            # default=all_columns,
             label_visibility="collapsed",
             placeholder="🔍 Filter columns"
         )
